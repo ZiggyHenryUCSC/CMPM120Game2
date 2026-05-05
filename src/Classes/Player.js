@@ -10,13 +10,16 @@ class Player extends Phaser.GameObjects.Sprite {
 
         this.bSpeed = 500;
         this.bOffset = 10;
+        this.bSprite = "yBullet"
+
+        this.health = 5;
 
         scene.add.existing(this);
         return this;
     }
 
     create() {
-        this.b = new Bullet(this.scene, this.x, this.y - this.bOffset, "Merp", this.bSpeed);
+        this.b = new Bullet(this.scene, this.x, this.y - this.bOffset, this.bSprite, this.bSpeed);
 
         this.space = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
@@ -56,5 +59,17 @@ class Player extends Phaser.GameObjects.Sprite {
         if (v != this.speed) {
             //console.log(v);
         }
+    }
+
+    hit() {
+        this.health -= 1;
+        
+        if (this.health <= 0) {
+            this.Death();
+        }
+    }
+
+    Death() {
+        console.log("Dead")
     }
 }

@@ -8,6 +8,8 @@ class Play extends Phaser.Scene {
         this.playerScale = 3;
         
         this.enemyCount = 10;
+
+        this.myScore = 0;
     }
 
     // Use preload to load art and sound assets before the scene starts running.
@@ -19,6 +21,9 @@ class Play extends Phaser.Scene {
         this.load.image("Archer", "archer.png");
         this.load.image("Knight", "knight.png");
         this.load.image("yBullet", "yBullet.png");
+
+        //"Modern", one of the default fonts from https://www.angelcode.com/products/bmfont/
+        this.load.bitmapFont("myFont", "myFont_0.png", "myFont.fnt");
     }
 
     create() {
@@ -33,6 +38,10 @@ class Play extends Phaser.Scene {
         sprite.player.setScale(this.playerScale);
         sprite.player.create();
 
+        //text
+        this.my.scoreText = this.add.bitmapText(250, 20, "myFont", "Score: " + this.myScore);
+        this.my.healthText = this.add.bitmapText(20, 20, "myFont", "Health: " + sprite.player.health);
+
         //enemies
         sprite.enemies = [];
         sprite.bullets = [];
@@ -45,9 +54,6 @@ class Play extends Phaser.Scene {
 
             sprite.bullets.push(enemy.b);
         }
-
-        /*this.test = new Enemy(this, null, 200, 100, "Merp");
-        this.test.create();*/
     }
 
     update(time, delta) {
@@ -55,7 +61,9 @@ class Play extends Phaser.Scene {
 
         sprite.player.update(time, delta);
         for (let enemy of sprite.enemies) {
-            enemy.update(time, delta);
+            if (enemy.visible) {
+                enemy.update(time, delta);
+            }
         }
 
         /*let xs = [];
@@ -63,16 +71,32 @@ class Play extends Phaser.Scene {
             xs.push(bullet.x);
         }*/
 
-        //collision
+        //check if enemy bullets hit player
         let hitPlayer = this.collisionCheck(sprite.player, sprite.bullets);
-        if (hitPlayer != null) {
+        if (hitPlayer) {
             hitPlayer.visible = false;
+
+            sprite.player.hit();
+            this.updateHealthText(sprite.player.health);
         }
+
+        //check if player bullet hits enemy
+        if (sprite.player.b.visible) {
+            let hitEnemy = this.collisionCheck(sprite.player.b, sprite.enemies);
+            if (hitEnemy) {
+                hitEnemy.hit();
+
+                sprite.player.b.visible = false;
+            }
+        }
+        
 
         //console.log(`fps: ${1000 / delta}`);
     }
 
     collisionCheck(induvidual, group) {
+        group = group.filter((i) => i.visible);
+
         group.sort(function(a, b) {
             return Math.abs(induvidual.x-a.x) - Math.abs(induvidual.x-b.x);
         });
@@ -91,5 +115,15 @@ class Play extends Phaser.Scene {
         if (Math.abs(a.x - b.x) > (a.displayWidth/2 + b.displayWidth/2)) return false;
         if (Math.abs(a.y - b.y) > (a.displayHeight/2 + b.displayHeight/2)) return false;
         return true;
+    }
+
+    updateScore(points) {
+        this.myScore += points;
+
+        this.my.scoreText.text = "Score: " + this.myScore;
+    }
+
+    updateHealthText(val) {
+        this.my.healthText.text = "Health: " + val;
     }
 }

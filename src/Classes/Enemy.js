@@ -6,6 +6,8 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.bSpeed = -200;
         this.bOffset = 10;
 
+        this.points = 100;
+
         scene.add.existing(this);
         return this;
     }
@@ -33,5 +35,17 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         b.x = this.x,
         b.y = this.y,
         b.visible = true
+    }
+
+    hit() {
+        this.Death();
+    }
+
+    Death() {
+        this.b.visible = false;
+
+        this.visible = false;
+
+        this.scene.updateScore(this.points);
     }
 }
