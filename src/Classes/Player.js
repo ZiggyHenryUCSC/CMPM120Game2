@@ -1,6 +1,6 @@
 class Player extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame, leftKey, rightKey) {
-        super(scene, x, y, texture, frame);
+    constructor(scene, x, y, leftKey, rightKey) {
+        super(scene, x, y, "Merp", null);
         this.scene = scene;
 
         this.left = leftKey;
@@ -16,7 +16,7 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     create() {
-        this.b = new Bullet(this.scene, this.x, this.y - this.bOffset, "Merp", null, this.bSpeed);
+        this.b = new Bullet(this.scene, this.x, this.y - this.bOffset, "Merp", this.bSpeed);
 
         this.space = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 

@@ -1,6 +1,6 @@
 class Bullet extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame, velocity) {
-        super(scene, x, y, texture, frame);
+    constructor(scene, x, y, texture, velocity) {
+        super(scene, x, y, texture);
 
         this.velocity = velocity; //with direction! up or down
 
@@ -14,7 +14,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
         let dt = delta / 1000;
         this.y -= this.velocity * dt;
 
-        if (this.y < 0) {
+        if (this.y < 0 || this.y > game.config.height) {
             this.visible = false;
         }
     }
