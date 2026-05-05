@@ -8,6 +8,10 @@ class Enemy extends Phaser.GameObjects.PathFollower {
 
         this.points = 100;
 
+        this.health = 1;
+
+        this.fireRate = 0.99;
+
         scene.add.existing(this);
         return this;
     }
@@ -21,7 +25,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         if (this.b.visible) {
             this.b.update(time, delta);
         } else {
-            if (Math.random() > 0.999) {
+            if (Math.random() > this.fireRate) {
                 this.shoot();
             }
         }
@@ -38,7 +42,16 @@ class Enemy extends Phaser.GameObjects.PathFollower {
     }
 
     hit() {
-        this.Death();
+        this.health -= 1;
+        
+        if (this.health <= 0) {
+            this.Death();
+        }
+        else {
+            this.scaleY = (this.scaleY * 1.15);
+
+            this.scene.sound.play('hit');
+        }
     }
 
     Death() {
@@ -47,5 +60,7 @@ class Enemy extends Phaser.GameObjects.PathFollower {
         this.visible = false;
 
         this.scene.updateScore(this.points);
+
+        this.scene.sound.play('dead');
     }
 }

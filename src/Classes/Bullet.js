@@ -6,6 +6,8 @@ class Bullet extends Phaser.GameObjects.Sprite {
 
         this.visible = false;
 
+        this.setDepth(1);
+
         scene.add.existing(this);
         return this;
     }

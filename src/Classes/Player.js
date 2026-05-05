@@ -70,6 +70,6 @@ class Player extends Phaser.GameObjects.Sprite {
     }
 
     Death() {
-        console.log("Dead")
+        this.scene.scene.start('GameOver');
     }
 }
