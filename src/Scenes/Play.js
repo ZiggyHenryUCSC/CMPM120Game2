@@ -9,7 +9,7 @@ class Play extends Phaser.Scene {
         
         this.enemyCount = 10;
 
-        this.waveTime = 5;
+        this.waveTime = 10;
         this.waveCounter = 0;
     }
 
